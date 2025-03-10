@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:minimalist_habit_tracker/components/my_drawer.dart';
 import 'package:minimalist_habit_tracker/components/my_habit_tile.dart';
