@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:minimalist_habit_tracker/components/my_drawer.dart';
 import 'package:minimalist_habit_tracker/components/my_habit_tile.dart';
+import 'package:minimalist_habit_tracker/components/my_heat_map.dart';
 import 'package:minimalist_habit_tracker/database/habit_database.dart';
 import 'package:minimalist_habit_tracker/models/habit.dart';
 import 'package:minimalist_habit_tracker/util/habit_util.dart';
@@ -167,7 +170,14 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         child: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
       ),
-      body: _buildHabitsList(),
+      body: ListView(
+        children: [
+          // Heatmap
+          _buildHeatMap(),
+          // Habit List
+          _buildHabitsList(),
+        ],
+      ),
     );
   }
 
@@ -182,6 +192,8 @@ class _HomePageState extends State<HomePage> {
     // Return the ListView
     return ListView.builder(
       itemCount: currentHabits.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         // Get the Habit at the current index
         Habit habit = currentHabits[index];
@@ -195,6 +207,35 @@ class _HomePageState extends State<HomePage> {
           editHabit: (context) => showEditHabitDialog(habit),
           deleteHabit: (context) => showDeleteHabitDialog(habit),
         );
+      },
+    );
+  }
+
+  // Construct Heatmap Interface
+  Widget _buildHeatMap() {
+    // Habits Database
+    final habitDatabase = context.watch<HabitDatabase>();
+    // Current Habits
+    List<Habit> currentHabits = habitDatabase.currentHabits;
+
+    // Return the HeatMap Interface
+    return FutureBuilder<DateTime?>(
+      future: habitDatabase.getFirstLaunchDate(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasData) {
+          // Return the HeatMap
+          return MyHeatMap(
+            startDate: snapshot.data!,
+            datasets: prepareHeatmapDataset(currentHabits),
+          );
+        }
+        // Return Empty Container if no data
+        else {
+          return Container();
+        }
       },
     );
   }
