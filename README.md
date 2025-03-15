@@ -4,6 +4,9 @@ A minimalist daily habit tracker and calendar app made with Flutter. It features
 clean and modern user interface with the ability to switch between light and dark mode.
 The application uses Isar Database for storing data, and features full CRUD functionality.
 
+![Flutter](https://img.shields.io/badge/-Flutter-05122A?style=flat-square&logo=Flutter&color=2a2e34) 
+![Dart](https://img.shields.io/badge/-Dart-05122A?style=flat-square&logo=Dart&color=2a2e34)
+
 <img src="./images/HabitAppMockup.png" alt="Cover Image" width="600px">
 
 ## Flutter Guide
